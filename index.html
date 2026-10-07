@@ -1,211 +1,930 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Sibu Kamek is a citizen envisioning journey for the Sibu Economic Zone, running from 2026 to 2028.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sibu Kamek | Let's Build Sibu Together</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="preload" as="image" href="logo-optimized.webp" type="image/webp" fetchpriority="high">
+  <link href="https://fonts.googleapis.com/css2?family=Covered+By+Your+Grace&display=swap" rel="stylesheet">
+  <script defer src="vendor/gsap.min.js"></script>
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 20vh;
+  background: #ffffff;
+  color: #0f0f10;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.container {
+  text-align: center;
+}
+
+.utility-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: 8px 24px;
+  background: #231f20;
+  color: #cfd4d5;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.utility-inner {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  max-width: 2000px;
+  margin: auto;
+}
+
+.utility-inner a {
+  color: #d7df27;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.landing-logo {
+  display: block;
+  width: 200px;
+  height: 225px;
+  margin: 0 auto 1rem;
+  transform-origin: center center;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: nowrap;
+}
+
+.title {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-family: 'Covered By Your Grace', cursive;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0;
+  transform-origin: center center;
+}
+
+/* Pill mode switch */
+.mode-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 64px;
+  height: 34px;
+  padding: 4px;
+  background: #e5e5e5;
+  border: 1px solid #c8c8c8;
+  border-radius: 999px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.mode-pill:hover {
+  border-color: #8a8a8a;
+}
+
+.mode-pill:focus-visible {
+  outline: 2px solid #0f0f10;
+  outline-offset: 2px;
+}
+
+.pill-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: transform 0.25s ease;
+  z-index: 1;
+}
+
+.mode-pill[aria-checked="true"] .pill-thumb {
+  transform: translateX(30px);
+}
+
+.pill-icon {
+  position: relative;
+  z-index: 2;
+  width: 22px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777777;
+  pointer-events: none;
+  margin: 0 1px;
+}
+
+.pill-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.mode-pill[aria-checked="false"] .pill-icon--classic {
+  color: #000000;
+}
+
+.mode-pill[aria-checked="true"] .pill-icon--visual {
+  color: #000000;
+}
+
+.links {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.link {
+  color: #555555;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.4rem 0.2rem;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.link:hover,
+.link:focus {
+  color: #0f0f10;
+  border-bottom-color: #0f0f10;
+}
+
+/* These rules only affect Visualized mode and its information panel. */
+#visualTree[hidden] { display:none; }
+body[data-mode="visualized"] > main { width:100%; }
+#visualTree {
+  --wood:#513727;
+  --ochre:#ae814b;
+  --green-1:#204b35;
+  --green-2:#41764a;
+  --green-3:#85a960;
+  width:min(calc(100% - 24px),1100px);
+  margin:0 auto;
+  padding-top:40px;
+}
+#visualTree.tree-exiting .tree-hint, #visualTree.tree-exiting #treeContext { visibility:hidden; }
+.tree-stage { display:grid; grid-template-columns:minmax(0,1fr); align-items:center; }
+#treeSvg { display:block; width:min(100%,640px); height:auto; aspect-ratio:1; justify-self:center; overflow:visible; }
+#visualTree [role="button"] { cursor:pointer; outline:none; }
+#visualTree [role="button"]:focus-visible { filter:drop-shadow(0 0 3px var(--ochre)); }
+#visualTree .tier { transition:opacity .2s ease; }
+#treeContext {
+  width:100%; max-width:420px; min-height:7.8em; margin:0 auto;
+  padding:8px 16px; text-align:center; font-size:13px; line-height:1.55;
+  overflow-wrap:anywhere; opacity:0; visibility:hidden; transition:opacity .2s ease;
+}
+#treeContext strong { display:block; margin-bottom:6px; color:var(--green-1); font-size:14px; }
+#treeContext.visible { opacity:1; visibility:visible; }
+#visualTree .tree-hint { margin:12px 12px 24px; font-size:12px; line-height:1.6; color:#666; }
+#treeDrawer {
+  position:fixed; inset:0; width:min(1060px,calc(100% - 64px)); height:min(850px,90dvh);
+  max-width:none; max-height:none; margin:auto; padding:0; overflow:hidden;
+  border:0; border-radius:0; color:#231f20; background:#fff; text-align:left;
+  box-shadow:10px 10px 0 #d7df27;
+}
+#treeDrawer[open] { display:flex; flex-direction:column; animation:tree-panel-in .22s ease-out; }
+@keyframes tree-panel-in { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+#treeDrawer::backdrop { background:#231f20bb; }
+.tree-toolbar { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 20px; border-bottom:1px solid #ddd; }
+#treeDrawerTitle { font-size:18px; }
+#treeClose { flex-shrink:0; min-width:44px; min-height:44px; border:0; background:#231f20; color:white; cursor:pointer; font:inherit; padding:8px 14px; }
+#treeClose:hover, #treeClose:focus-visible { background:#ee4036; }
+#treeDrawer :focus-visible { outline:3px solid #2d6983; outline-offset:3px; }
+#treePage { width:100%; flex:1; min-height:0; border:0; background:#fff; }
+body.tree-modal-open { overflow:hidden; }
+#Bark { opacity:0; transition:opacity .3s; pointer-events:none; }
+#Programmes.is-active #Bark { opacity:.65; }
+#visualTree .tier.is-active { filter:drop-shadow(0 0 3px #ae814b88); }
+body.tree-returning .landing-logo, body.tree-returning .links { visibility:hidden !important; }
+@media(min-width:700px) {
+  #treeSvg { width:min(100%,640px,max(340px,calc(100svh - 210px))); }
+}
+@media(max-width:699px) {
+  #treeDrawer { width:100%; height:100dvh; margin:0; box-shadow:none; }
+  .tree-toolbar { padding:10px 14px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  #Bark { transition:none; }
+  #treeDrawer[open] { animation:none; }
+}
+@media(min-width:1080px) {
+  .tree-stage { grid-template-columns:190px minmax(0,1fr) 190px; }
+  #treeSvg { grid-column:2; grid-row:1; }
+  #treeContext { grid-column:3; grid-row:1; border-left:1px dashed var(--ochre); padding:12px 0 12px 18px; text-align:left; }
+}
+@media(prefers-reduced-motion:reduce) {
+  #visualTree .tier, #treeContext, .pill-thumb { transition:none; }
+}
+  </style>
 </head>
 <body>
-  <header class="site-header" id="top">
-    <div class="utility-bar">
-      <div class="container utility-inner">
-        <span>Community-led envisioning for the Sibu Economic Zone</span>
-        <a>Sibu Kamek Portal <span aria-hidden="true">↗&#xFE0E;</span></a>
-      </div>
+  <main class="container">
+    <div class="utility-bar"><div class="container utility-inner"><a href="index.html">Sibu Kamek Portal <span aria-hidden="true">&#8599;</span></a></div></div>
+          <img class="landing-logo" src="logo-optimized.webp" alt="Sibu Kamek Logo" width="200" height="225" fetchpriority="high" decoding="async">
+          <button class="mode-pill" id="modeToggle" type="button" role="switch" aria-checked="false" aria-label="Switch to visualized mode">
+        <span class="pill-thumb"></span>
+        <span class="pill-icon pill-icon--classic" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M256-240h84l44-122h192l44 122h84L522-720h-84L256-240Zm152-192 70-198h4l70 198H408ZM160-80q-33 0-56.5-23.5T80-160v-640q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v640q0 33-23.5 56.5T800-80H160Zm0-80h640v-640H160v640Zm0-640v640-640Z"/></svg>
+        </span>
+        <span class="pill-icon pill-icon--visual" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Z"/></svg>
+        </span>
+      </button>
+    <div class="header-row">
     </div>
-    <div class="container nav-wrap">
-      <a class="wordmark" href="#top" aria-label="Sibu Kamek home">
-        <span class="wordmark-mark">SK</span>
-        <span>Sibu <b>Kamek</b></span>
-      </a>
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
-      <nav id="main-nav" aria-label="Main navigation">
-        <details class="nav-dropdown">
-          <summary>About <span aria-hidden="true">⌄</span></summary>
-          <div class="dropdown-menu">
-            <a href="#about">The Project</a>
-            <a href="#quote-band">The Name</a>
-            <a href="#priorities">The Concerns</a>
-          </div>
-        </details>
-        <details class="nav-dropdown">
-          <summary>Programmes <span aria-hidden="true">⌄</span></summary>
-          <div class="dropdown-menu">
-            <a href="#programme">Core Events</a>
-            <a href="#wishing-tree">Wishing Tree</a>
-          </div>
-        </details>
-        <a href="#news">News</a>
-        <a class="button button-blue" href="#contact">Have Your Say <span aria-hidden="true">↗&#xFE0E;</span></a>
-      </nav>
-    </div>
-  </header>
 
-  <main>
-    <section class="hero">
-      <div class="hero-image" role="img" aria-label="The Rajang River and Sibu waterfront"></div>
-      <div class="hero-overlay"></div>
-      <div class="container hero-content">
-        <p class="eyebrow hero-eyebrow">Sibu · Sarawak </p>
-        <h1>SIBU KAMEK</h1>
-        <p class="hero-intro">A community-led envisioning journey for the Sibu Economic Zone. Shaped by the people who call Sibu home.</p>
-        <div class="hero-actions">
-          <a class="button button-azure" href="#about">Explore<span aria-hidden="true">↗&#xFE0E;</span></a>
-        </div>
-      </div>
-    </section>
+    <nav class="links" aria-label="Main navigation">
+      <a href="about.html" class="link">About</a>
+      <a href="programmes.html" class="link">Programmes</a>
+      <a href="news.html" class="link">News</a>
+      <a href="contact.html" class="link">Contact</a>
+    </nav>
 
-    <section class="intro-section" id="about">
-      <div class="container two-column">
-        <div>
-          <p class="eyebrow">ABOUT SIBU KAMEK</p>
-          <h2>The next chapter should sound like Sibu.</h2>
-        </div>
-        <div class="intro-copy">
-          <p>In July 2026, the Right Honourable Datuk Patinggi Tan Sri (Dr) Abang Haji Abdul Rahman Zohari bin Tun Datuk Abang Haji
-              Openg, the Premier of Sarawak, announced the establishment of the Sibu Economic Zone (SEZ), backed by an initial allocation
-              of RM1.5 billion under the Sarawakku Sayang 2026 programme for the Sibu Division. The state has set a clear vision for the
-              zone. Sibu Kamek complements it with a citizen-led envisioning exercise, so that when the SEZ agency is formed its
-              priorities already carry a mandate from the people of Sibu.</p>
-          <p>The transformation of Sibu is expected to take fifteen to twenty years, with roughly five years of planning before
-              implementation proceeds in stages. That planning window is precisely when public participation carries the most weight.
-              <strong>Sibu Kamek</strong> is a citizen-led effort to make sure residents' voices are written into those plans before they are finished, not after.</p>
-          <a class="button button-blue" href="https://www.theborneopost.com/2026/07/11/premier-approves-sibu-economic-zone-establishment-with-rm1-5-bln-allocation-for-towns-transformation/" target="_blank" rel="noopener noreferrer">Read More <span aria-hidden="true">↗&#xFE0E;</span></a>
-        </div>
+    <section id="visualTree" hidden aria-label="Explore Sibu Kamek through the tree of life">
+      <div class="tree-stage">
+        <svg id="treeSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="group" aria-labelledby="treeTitle treeDescription">
+          <title id="treeTitle">Sibu Kamek · Tree of life</title>
+          <desc id="treeDescription">Choose the roots for About, the trunk and branches for Programmes, or the leaves for News and Outcomes. Use Tab, then Enter or Space to explore.</desc>
+          <g id="treeArt">
+            <g id="Roots" class="tier" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="treeDrawer"></g>
+            <g id="Crown">
+              <g id="Programmes" class="tier" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="treeDrawer"><g id="Branches"></g>
+              <g id="Trunk">
+                <path fill="var(--wood)" d="M362 500 C380 477 370 448 378 418 C386 388 377 361 381 333 C385 305 402 280 400 248 C413 274 407 307 410 334 C413 363 430 389 426 420 C424 444 417 462 438 500 Z"/>
+                <g id="Bark" fill="none" stroke="var(--ochre)" stroke-width="2" stroke-linecap="round">
+                  <path d="M390 483 L394 465 L389 449 L394 427 L391 407 M402 475 L398 458 L403 437 L400 422 M406 403 L410 388 L403 365 L406 347 M394 382 L391 365 L396 344 L394 327"/>
+                </g>
+                <path fill="none" stroke="transparent" stroke-width="30" d="M400 490 C401 445 406 417 399 378 L399 285"/>
+              </g>
+              </g>
+              <g id="Leaves" class="tier" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="treeDrawer"></g>
+            </g>
+          </g>
+        </svg>
+        <aside id="treeContext" aria-hidden="true"><strong></strong><span></span></aside>
       </div>
-    </section>
-
-    <section class="quote-band" id="quote-band">
-      <div class="container quote-inner">
-        <p class="eyebrow">The name carries the idea</p>
-        <blockquote><strong>Kamek</strong></blockquote>
-        <p class="quote-text">Kamek is Sarawak’s own word for <strong>“My”</strong>.When thousands of individual visions come together, they form one shared vision, rooted in local voices.</p>
-      </div>
-    </section>
-
-    <section class="priorities-section" id="priorities">
-      <div class="container">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">The Concerns Being Addressed</p>
-            <h2>Turning Concerns<br><em>Into the Priorities.</em></h2>
-          </div>
-          <p>Each priority becomes a question for residents and a test of whether the emerging vision delivers to the citizens of Sibu.</p>
-        </div>
-        <div class="priority-grid">
-          <div class="priority"><span>01</span><h3>Urban poverty</h3></div>
-          <div class="priority"><span>02</span><h3>Brain drain</h3></div>
-          <div class="priority"><span>03</span><h3>Migration</h3></div>
-          <div class="priority"><span>04</span><h3>Job Opportunities</h3></div>
-          <div class="priority"><span>05</span><h3>Household income</h3></div>
-          <div class="priority"><span>06</span><h3>Affordable housing</h3></div>
-          <div class="priority"><span>07</span><h3>An ageing population</h3></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="programme-section" id="programme">
-      <div class="container">
-        <div class="section-heading light-heading">
-          <div>
-            <p class="eyebrow">Programmes · The Core Events</p>
-            <h2>From many voices<br><em>to one vision.</em></h2>
-          </div>
-          <p>The four major events being conducted to engage the community in shaping Sibu’s future.</p>
-        </div>
-        <div class="stage-grid">
-          <article class="stage-card stage-ground"><span class="stage-number">01</span><p class="stage-label">2026</p><h3>Stakeholder Mapping</h3><p>Discussions and exploration to understand who should be engaged in the development of Sibu’s future.</p></article>
-          <article class="stage-card stage-build"><span class="stage-number">02</span><p class="stage-label">2026</p><h3>Wishing Trees</h3><p>Tree-shaped boards at Sibu public spaces where anyone writes what they wish for Sibu, in any language.</p></article>
-          <article class="stage-card stage-reach"><span class="stage-number">03</span><p class="stage-label">2026</p><h3>Surveys and Media</h3><p>A survey for the citizens and diaspora in multiple languages carried by paper, digital, radio and social media.</p></article>
-          <article class="stage-card stage-embed"><span class="stage-number">04</span><p class="stage-label">2026-Onwards</p><h3>Future Workshops</h3><p>Sessions for children, youth and elders using digital scenes to walk through Sibu's possible futures before making choices.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="feature-section" id="wishing-tree">
-      <div class="container feature-grid">
-        <div class="feature-visual">
-          <div class="feature-shape shape-one"></div>
-          <div class="feature-shape shape-two"></div>
-          <div class="feature-tree" aria-hidden="true"><span class="trunk"></span><span class="canopy canopy-a"></span><span class="canopy canopy-b"></span><span class="canopy canopy-c"></span><span class="fruit fruit-a"></span><span class="fruit fruit-b"></span><span class="fruit fruit-c"></span></div>
-        </div>
-        <div class="feature-copy">
-          <p class="eyebrow">Programmes · Wishing Trees</p>
-          <h2>What do you wish for Sibu?</h2>
-          <p>Tree-shaped boards invite everyone to post, in any language, what they wish for Sibu. The trunk asks what development means. The fruits hold the future people want. The roots name what must be kept.</p>
-          <p>Harvested weekly and paired with a digital twin, the walls turn everyday hopes into the questions that shape the “My Sibu” survey.</p>
-          <a class="button button-blue" href="#contact">Add your voice <span aria-hidden="true">↗&#xFE0E;</span></a>
-        </div>
-      </div>
-    </section>
-
-    <section class="places-section" id="places">
-      <div class="container places-grid">
-        <div class="places-copy">
-          <p class="eyebrow">Across the division</p>
-          <h2>Every place has<br><em>a part to play.</em></h2>
-          <p>Six sites connect the programme to markets, schools, neighbourhoods, the university, longhouses and the Rajang. The work meets people where they already are.</p>
-          <div class="site-count"><strong>6</strong><span>Wishing Trees<br>Placed</span></div>
-          <a class="button button-azure" href="https://maps.app.goo.gl/cL1sPLgzWtzjgTkV6" target="_blank" rel="noopener noreferrer">Find Us<span aria-hidden="true">↗&#xFE0E;</span></a>
-        </div>
-        <div class="map-card" role="img" aria-label="Illustrated map of Sibu activity sites">
-          <div class="map-river"></div><span class="map-label label-uts">UTS</span><span class="map-label label-market">Central Market</span><span class="map-label label-nangka">Kampung Nangka</span><span class="map-label label-bawang">Bawang Assan</span>
-          <i class="map-pin pin-a"></i><i class="map-pin pin-b"></i><i class="map-pin pin-c"></i><i class="map-pin pin-d"></i><i class="map-pin pin-e"></i><i class="map-pin pin-f"></i>
-          <div class="map-key"><span><i class="key-dot key-red"></i> Reach</span><span><i class="key-dot key-blue"></i> Deliberate</span><span><i class="key-dot key-green"></i> River</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="news-section" id="news">
-      <div class="container">
-        <div class="section-heading news-heading">
-          <div>
-            <p class="eyebrow">News · From the ground</p>
-            <h2>What’s happening<br><em>around Sibu.</em></h2>
-          </div>
-          <p>Notes, updates and stories from the people and places shaping the Sibu Kamek journey.</p>
-        </div>
-        <div class="news-carousel" aria-label="Sibu Kamek news carousel">
-          <div class="news-track">
-            <article class="news-card" tabindex="0" data-news-title="Wishing Trees begin their first harvest" data-news-date="14 September 2026" data-news-category="Programme update" data-news-image="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=900&q=80"><img src="https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=900&q=80" alt="Sunlight through a leafy forest canopy"><div class="news-card-body"><p class="news-meta">14 September 2026 · Programme update</p><h3>Wishing Trees begin their first harvest</h3><span class="news-read">Read story <span aria-hidden="true">↗&#xFE0E;</span></span></div></article>
-            <article class="news-card" tabindex="0" data-news-title="A new conversation starts at Central Market" data-news-date="03 September 2026" data-news-category="Community voices" data-news-image="https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&w=900&q=80"><img src="https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&w=900&q=80" alt="Colourful market produce arranged on a stall"><div class="news-card-body"><p class="news-meta">03 September 2026 · Community voices</p><h3>A new conversation starts at Central Market</h3><span class="news-read">Read story <span aria-hidden="true">↗&#xFE0E;</span></span></div></article>
-            <article class="news-card" tabindex="0" data-news-title="Young Sibu imagines a city that stays" data-news-date="27 August 2026" data-news-category="Field notes" data-news-image="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=900&q=80"><img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=900&q=80" alt="Students collaborating around a table"><div class="news-card-body"><p class="news-meta">27 August 2026 · Field notes</p><h3>Young Sibu imagines a city that stays</h3><span class="news-read">Read story <span aria-hidden="true">↗&#xFE0E;</span></span></div></article>
-            <article class="news-card" tabindex="0" data-news-title="Six places, one shared invitation" data-news-date="19 August 2026" data-news-category="Across the division" data-news-image="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=80"><img src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=80" alt="Aerial view of a river winding through green land"><div class="news-card-body"><p class="news-meta">19 August 2026 · Across the division</p><h3>Six places, one shared invitation</h3><span class="news-read">Read story <span aria-hidden="true">↗&#xFE0E;</span></span></div></article>
-            <article class="news-card" tabindex="0" data-news-title="What does development mean to you?" data-news-date="11 August 2026" data-news-category="The big question" data-news-image="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80" alt="Friends talking together outdoors"><div class="news-card-body"><p class="news-meta">11 August 2026 · The big question</p><h3>What does development mean to you?</h3><span class="news-read">Read story <span aria-hidden="true">↗&#xFE0E;</span></span></div></article>
-            <article class="news-card" tabindex="0" data-news-title="The river remains part of the answer" data-news-date="02 August 2026" data-news-category="Sibu stories" data-news-image="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=80"><img src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=80" alt="A broad river surrounded by green landscape"><div class="news-card-body"><p class="news-meta">02 August 2026 · Sibu stories</p><h3>The river remains part of the answer</h3><span class="news-read">Read story <span aria-hidden="true">↗&#xFE0E;</span></span></div></article>
-          </div>
-          <div class="news-controls"><button class="carousel-button" type="button" data-carousel-direction="prev" aria-label="Previous news stories">←</button><span class="carousel-status" aria-live="polite">01 / 02</span><button class="carousel-button" type="button" data-carousel-direction="next" aria-label="Next news stories">→</button></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="contact-section" id="contact">
-      <div class="container contact-inner">
-        <div><p class="eyebrow">Be part of Sibu Kamek</p><h2>Tell us what<br><em>your Sibu needs.</em></h2></div>
-        <div><p>Sibu’s future should not only be planned <strong><u>for</u></strong> the community, but also <strong><u>by</u></strong> the community.</p><a class="button button-blue">Have Your Say <span aria-hidden="true">↗&#xFE0E;</span></a></div>
-      </div>
+      <p class="tree-hint">Roots · About &nbsp; / &nbsp; Trunk & branches · Programmes &nbsp; / &nbsp; Leaves · News & Outcomes</p>
     </section>
   </main>
+  <dialog id="treeDrawer" aria-labelledby="treeDrawerTitle"><div class="tree-toolbar"><h2 id="treeDrawerTitle"></h2><button id="treeClose" type="button" autofocus aria-label="Close page overlay">Close ×</button></div><iframe id="treePage" title="Selected classic page"></iframe></dialog>
 
-  <footer class="site-footer">
-    <div class="container footer-top">
-      <a class="wordmark wordmark-footer" href="#top"><span class="wordmark-mark">SK</span><span>Sibu <b>Kamek</b></span></a>
-      <div class="footer-links"><a href="#about">About</a><a href="#programme">Programme</a><a href="#contact">Contact</a></div>
-    </div>
-    <div class="container footer-bottom"><span>© 2026 Sibu Kamek</span><span>University of Technology Sarawak · ASSET</span><a href="#top">Back to top ↑</a></div>
-  </footer>
-  <div class="article-modal" id="article-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="article-title">
-    <div class="article-dialog">
-      <button class="article-close" type="button" aria-label="Close article">×</button>
-      <img class="article-image" src="" alt="">
-      <div class="article-content"><p class="news-meta" id="article-meta"></p><h2 id="article-title"></h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae arcu sed neque consequat porttitor. Sibu Kamek brings residents, ideas and everyday observations into one shared conversation about the future.</p><p>Praesent commodo, sapien in facilisis tincidunt, lectus justo cursus arcu, sed fermentum neque lorem at nisl. Donec vel sem at lorem posuere vulputate. Curabitur suscipit, lectus a pretium feugiat, erat augue luctus ipsum, a posuere justo nibh a erat.</p><p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Mauris sed eros at lectus porttitor commodo. Aenean euismod, ipsum sed consequat aliquet, erat erat dignissim mi, vitae finibus sem sapien at justo.</p><p>Nullam fermentum, massa at tristique luctus, ipsum justo commodo mauris, sed bibendum leo libero non arcu. The story continues through the people who show up, speak clearly and make room for one another.</p></div>
-    </div>
-  </div>
-  <script src="script.js"></script>
+  <script>
+// Content metadata used to distribute programme and news foliage.
+const SIBU_DATA = {
+  "Leaves": {
+    "title": "News & Community",
+    "href": "news.html",
+    "text": "Notes, updates and stories from the people and places shaping the Sibu Kamek journey.",
+    "linkLabel": "Explore News"
+  },
+  "Programmes": [
+    {
+      "title": "Stakeholder mapping",
+      "href": "programmes.html",
+      "text": "Discussions and exploration to understand who should be engaged in Sibu's future."
+    },
+    {
+      "title": "Wishing trees",
+      "href": "programmes.html",
+      "text": "Tree-shaped boards in public spaces where anyone writes what they wish for Sibu."
+    },
+    {
+      "title": "Surveys and media",
+      "href": "programmes.html",
+      "text": "A survey for citizens and diaspora in multiple languages, carried by paper, digital, radio and social media."
+    },
+    {
+      "title": "Future workshops",
+      "href": "programmes.html",
+      "text": "Sessions for children, youth and elders to explore Sibu's possible futures before making choices."
+    },
+    {
+      "title": "Public dashboard",
+      "href": "programmes.html",
+      "text": "Everything Sibu said, shown openly online so anyone can see it and respond."
+    },
+    {
+      "title": "Seat for the Rajang",
+      "href": "programmes.html",
+      "text": "The river and the forest given a voice in decisions that will change them."
+    }
+  ],
+  "News": [
+    {
+      "title": "Wishing Trees begin their first harvest",
+      "href": "news.html",
+      "label": "14 September 2026 · Programme update",
+      "date": "2026-09-14"
+    },
+    {
+      "title": "A new conversation starts at Central Market",
+      "href": "news.html",
+      "label": "03 September 2026 · Community voices",
+      "date": "2026-09-03"
+    },
+    {
+      "title": "Young Sibu imagines a city that stays",
+      "href": "news.html",
+      "label": "27 August 2026 · Field notes",
+      "date": "2026-08-27"
+    },
+    {
+      "title": "Six places, one shared invitation",
+      "href": "news.html",
+      "label": "19 August 2026 · Across the division",
+      "date": "2026-08-19"
+    }
+  ]
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const $ = id => document.getElementById(id);
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const section = $('visualTree');
+  const svg = $('treeSvg');
+  const drawer = $('treeDrawer');
+  const toggle = $('modeToggle');
+  const logo = document.querySelector('.landing-logo');
+  const nav = document.querySelector('.links');
+  const keys = ['Roots', 'Programmes', 'Leaves'];
+  const destinations = { Roots:{title:'About', href:'about.html'}, Programmes:{title:'Programmes', href:'programmes.html'}, Leaves:{title:'News & Outcomes', href:'news.html'} };
+  const tiers = keys.map($);
+  const ns = 'http://www.w3.org/2000/svg';
+  const HOME = '0 0 800 800';
+  // All structural parts use the same origin: the collar is at (400, 500).
+  // Wood: x=100..700, y=96..660. Foliage: x=55..745, y=45..400.
+  let visual = false;
+  let growthFrame=0, growthTime=0, pendingGrowth, opener, modeTransition;
+  const transitionAnimations=[], transitionGhosts=[];
+  const gs=window.gsap;
+
+  function element(tag, parent, attributes = {}) {
+    const node = document.createElementNS(ns, tag);
+    Object.entries(attributes).forEach(([name, value]) => node.setAttribute(name, value));
+    parent.append(node);
+    return node;
+  }
+  function path(parent, d, attributes = {}) {
+    return element('path', parent, { d, ...attributes });
+  }
+  function point(curve, t) {
+    const u = 1 - t;
+    return [0, 1].map(k => u*u*u*curve[0][k] + 3*u*u*t*curve[1][k] + 3*u*t*t*curve[2][k] + t*t*t*curve[3][k]);
+  }
+  function tangent(curve, t) {
+    const u = 1 - t;
+    return [0, 1].map(k => 3*u*u*(curve[1][k]-curve[0][k]) + 6*u*t*(curve[2][k]-curve[1][k]) + 3*t*t*(curve[3][k]-curve[2][k]));
+  }
+  function unit(vector) {
+    const length = Math.hypot(...vector) || 1;
+    return vector.map(value => value / length);
+  }
+  // Match child emergence to distance along its parent's revealed path.
+  function arcFraction(curve,t) {
+    let total=0,partial=0,previous=point(curve,0);
+    for(let i=1;i<=100;i++) {
+      const current=point(curve,i/100), length=Math.hypot(current[0]-previous[0],current[1]-previous[1]);
+      total+=length;
+      partial+=length*Math.min(1,Math.max(0,t*100-(i-1)));
+      previous=current;
+    }
+    return partial/total;
+  }
+  function coords(p) { return p.map(n => n.toFixed(2)).join(' '); }
+  // A smooth tapered ribbon around a cubic centreline. Every twig starts on
+  // its parent's actual curve, never on an independently estimated position.
+  const growthParts = [];
+  const defs = element('defs',svg);
+  function revealAlong(node, d, width, start, duration) {
+    const id='growth-'+growthParts.length;
+    const mask=element('mask',defs,{id,maskUnits:'userSpaceOnUse',x:0,y:0,width:800,height:800});
+    const stroke=path(mask,d,{fill:'none',stroke:'white','stroke-width':width,'stroke-linecap':'butt',pathLength:1});
+    const length=stroke.getTotalLength();
+    const samples=Array.from({length:81},(_,i)=>{
+      const p=stroke.getPointAtLength(length*i/80);
+      const before=stroke.getPointAtLength(Math.max(0,length*i/80-.5));
+      const after=stroke.getPointAtLength(Math.min(length,length*i/80+.5));
+      const direction=unit([after.x-before.x,after.y-before.y]);
+      return {x:p.x,y:p.y,nx:-direction[1],ny:direction[0]};
+    });
+    stroke.setAttribute('fill','white');stroke.setAttribute('stroke','none');
+    growthParts.push({node,stroke,id,start,duration,width,samples});
+  }
+  function limb(parent, curve, width, hit = false, start=0, duration=.8) {
+    const left = [], right = [];
+    for (let i = 0; i <= 48; i++) {
+      const t = i / 48, p = point(curve, t), v = unit(tangent(curve, t));
+      const radius = width * .5 * Math.pow(1 - t, 1.35) + .12;
+      left.push([p[0] - v[1]*radius, p[1] + v[0]*radius]);
+      right.push([p[0] + v[1]*radius, p[1] - v[0]*radius]);
+    }
+    const outline = left.concat(right.reverse());
+    let d = 'M' + coords(outline[0]);
+    for (let i = 1; i < outline.length - 1; i++) {
+      const mid = outline[i].map((value, k) => (value + outline[i+1][k]) / 2);
+      d += ' Q' + coords(outline[i]) + ' ' + coords(mid);
+    }
+    const shape=path(parent, d + ' L' + coords(outline.at(-1)) + ' Z', { fill: 'var(--wood)' });
+    revealAlong(shape,`M${coords(curve[0])} C${coords(curve[1])} ${coords(curve[2])} ${coords(curve[3])}`,width+8,start,duration);
+    if (hit) path(parent, `M${coords(curve[0])} C${coords(curve[1])} ${coords(curve[2])} ${coords(curve[3])}`, {
+      fill: 'none', stroke: 'transparent', 'stroke-width': 30
+    });
+  }
+
+  // Broad, shallow roots with smaller forks rather than straight radial spikes.
+  const collar=path($('Roots'), 'M362 500 C382 515 369 525 350 531 C375 533 388 521 400 513 C411 524 425 533 451 532 C430 522 421 513 438 500 Z', { fill:'var(--wood)' });
+  const roots = [
+    [[378,500],[371,535],[235,515],[153,552]],
+    [[384,502],[384,546],[279,549],[223,605]],
+    [[394,503],[408,550],[332,591],[329,644]],
+    [[402,504],[379,559],[433,599],[417,665]],
+    [[414,502],[412,549],[525,556],[555,614]],
+    [[423,500],[438,532],[569,520],[646,557]]
+  ];
+  roots.forEach((curve, index) => {
+    limb($('Roots'), curve, 24, true, .04+index*.025, .85);
+    for (let j = 0; j < 4; j++) {
+      const start = point(curve, .32 + j*.16);
+      const v = unit(tangent(curve, .32 + j*.16));
+      const side = index < 3 ? -1 : 1;
+      const end = [start[0] + side*(30 + j*7), start[1] + 21 + (j%2)*20];
+      const fork = [start, [start[0]+v[0]*20,start[1]+v[1]*20], [end[0]-side*14,end[1]-22], end];
+      const forkStart=.04+index*.025+arcFraction(curve,.32+j*.16)*.85;
+      limb($('Roots'), fork, 5.5-j*.6, false, forkStart, .35);
+      const joint = point(fork, .6);
+      limb($('Roots'), [joint, [joint[0]+side*7,joint[1]+6], [joint[0]-side*5,joint[1]+19], [joint[0]+side*8,joint[1]+30]], 2, false, forkStart+arcFraction(fork,.6)*.35, .25);
+    }
+  });
+
+  // Programme boughs and a central leader form a rounded crown. Their first tangents flow up
+  // through the trunk; their tips spread out, following the reference trees.
+  const boughs = [
+    [[392,427],[375,366],[208,387],[117,306]],
+    [[392,408],[367,326],[220,288],[182,184]],
+    [[396,377],[416,303],[278,229],[311,110]],
+    [[405,384],[384,310],[520,231],[492,103]],
+    [[410,413],[433,335],[581,293],[624,182]],
+    [[411,429],[439,370],[603,389],[684,302]],
+    [[400,372],[386,265],[430,185],[402,87]]
+  ];
+  revealAlong($('Trunk'),'M400 503 C400 430 402 335 400 245',100,.08,1.15);
+  const leafSlots = [], petioles=[];
+  boughs.forEach((curve, branchIndex) => {
+    const wood = element('g', $('Branches'), { 'data-programme': branchIndex % Math.max(1,SIBU_DATA.Programmes.length) });
+    const branchStart=.08+(500-curve[0][1])/258*1.15;
+    limb(wood, curve, branchIndex===6?18:29, true, branchStart, 1.15);
+    for (let j = 0; j < 8; j++) {
+      const t = .28 + j*.095;
+      const start = point(curve,t), v = unit(tangent(curve,t));
+      const side = j%2 ? 1 : -1;
+      const normal = [-v[1],v[0]];
+      const reach = 35 + 12*Math.sin(j*1.7+branchIndex);
+      const end = [start[0]+v[0]*40+normal[0]*side*reach, start[1]+v[1]*40+normal[1]*side*reach];
+      const twig = [start, [start[0]+v[0]*24,start[1]+v[1]*24], [end[0]-v[0]*18,end[1]-v[1]*18], end];
+      const twigStart=branchStart+arcFraction(curve,t)*1.15;
+      limb(wood, twig, 6.5, false, twigStart, .42);
+      for (let k = 0; k < 3; k++) {
+        const fraction = .2+k*.38;
+        const base = point(twig,fraction), direction = unit(tangent(twig,fraction));
+        const spread = ((k+j)%2 ? 1 : -1)*1.35;
+        const leafDirection = unit([direction[0]-direction[1]*spread, direction[1]+direction[0]*spread]);
+        const stemTip = [base[0]+leafDirection[0]*7,base[1]+leafDirection[1]*7];
+        const petiole=path(wood, `M${coords(base)} Q${coords([base[0]+direction[0]*4,base[1]+direction[1]*4])} ${coords(stemTip)}`, {
+          fill:'none', stroke:'var(--wood)', 'stroke-width':1.1
+        });
+        const leafStart=twigStart+arcFraction(twig,fraction)*.42+.09;
+        petioles.push({node:petiole,start:leafStart-.08});
+        leafSlots.push({ x:stemTip[0], y:stemTip[1], angle:Math.atan2(leafDirection[0],-leafDirection[1])*180/Math.PI,
+          size:(.52+(k%3)*.02)*1.44, programme:branchIndex, start:leafStart });
+      }
+    }
+    const end = curve[3], v = tangent(curve,1);
+    leafSlots.push({x:end[0],y:end[1],angle:Math.atan2(v[0],-v[1])*180/Math.PI,size:.54*1.44,programme:branchIndex,start:branchStart+1.2});
+  });
+
+  // Feather-like alternating groups follow every twig, including the low
+  // right-hand bough. Conservative circular envelopes keep the resting
+  // silhouettes separate, with extra breathing room for the hover motion.
+  const arranged=leafSlots.map(slot=>{
+    const angle=slot.angle*Math.PI/180;
+    const x=slot.x+Math.sin(angle)*18*slot.size;
+    const y=slot.y-Math.cos(angle)*18*slot.size;
+    return {slot,x,y,anchorX:x,anchorY:y,radius:18*slot.size};
+  });
+  const branchClearance=boughs.flatMap(curve=>Array.from({length:25},(_,i)=>{
+    const t=i/24,p=point(curve,t);
+    return {x:p[0],y:p[1],radius:14.5*Math.pow(1-t,1.35)+1};
+  }));
+  for(let pass=0;pass<360;pass++) {
+    // Early passes preserve the ordered groups; final passes only resolve gaps.
+    if(pass<100)arranged.forEach(p=>{p.x+=(p.anchorX-p.x)*.025;p.y+=(p.anchorY-p.y)*.025;});
+    for(let i=0;i<arranged.length;i++) {
+      const a=arranged[i];
+      for(let j=i+1;j<arranged.length;j++) {
+        const b=arranged[j],dx=b.x-a.x,dy=b.y-a.y;
+        const distance=Math.hypot(dx,dy),minimum=a.radius+b.radius+3;
+        if(distance>=minimum)continue;
+        const angle=(i+j)*2.399963;
+        const nx=distance>1e-6?dx/distance:Math.cos(angle),ny=distance>1e-6?dy/distance:Math.sin(angle);
+        const push=(minimum-distance)*.505;
+        a.x-=nx*push;a.y-=ny*push;b.x+=nx*push;b.y+=ny*push;
+      }
+      for(const branch of pass<180?branchClearance:[]) {
+        const dx=a.x-branch.x,dy=a.y-branch.y,d=Math.hypot(dx,dy),minimum=a.radius+branch.radius+2;
+        if(d<minimum && d>1e-6){a.x+=dx/d*(minimum-d);a.y+=dy/d*(minimum-d);}
+      }
+    }
+  }
+  arranged.forEach(({slot,x,y})=>{
+    const angle=slot.angle*Math.PI/180;
+    slot.x=x-Math.sin(angle)*18*slot.size;
+    slot.y=y+Math.cos(angle)*18*slot.size;
+  });
+
+  const latest = Math.max(0, ...SIBU_DATA.News.map(item => Date.parse(item.date) || 0));
+  const total = Math.max(leafSlots.length, SIBU_DATA.News.length);
+  const newsBySlot = new Map(SIBU_DATA.News.map((item,i) => [Math.floor((i+.5)*leafSlots.length/SIBU_DATA.News.length),item]));
+  for (let i = 0; i < total; i++) {
+    const slot = leafSlots[i % leafSlots.length];
+    const item = newsBySlot.get(i) || SIBU_DATA.Programmes[slot.programme % Math.max(1,SIBU_DATA.Programmes.length)] || SIBU_DATA.Leaves;
+    const fresh = !!item.date && Date.parse(item.date) === latest;
+    const placement = element('g', $('Leaves'), {
+      transform:`translate(${slot.x} ${slot.y}) rotate(${slot.angle}) scale(${slot.size})`,
+      'data-content-title':item.title, 'aria-hidden':'true'
+    });
+    // Hit areas stay still while the painted leaf moves, preventing hover flicker.
+    element('circle',placement,{cx:0,cy:-17,r:20,fill:'transparent','pointer-events':'all'});
+    const reveal = element('g', placement, {class:'leaf-reveal', 'data-start':slot.start});
+    const animated = element('g', reveal, {class:'foliage','pointer-events':'none'});
+    const title = element('title', animated); title.textContent = item.title;
+    path(animated, 'M0 0 C-12 -8 -15 -25 0 -36 C15 -25 12 -8 0 0Z', {
+      fill:`var(--green-${fresh?3:1+(i*7+slot.programme)%3})`
+    });
+    path(animated, 'M0 0 L0 -30', {fill:'none',stroke:'transparent','stroke-width':30});
+  }
+  // All generated drawing paths are now immutable. Only empty wrapper groups
+  // animate, so resets can never overwrite an authored leaf placement.
+  const foliage = [...section.querySelectorAll('.foliage')];
+  const leafReveals = [...section.querySelectorAll('.leaf-reveal')];
+  [['Roots','rootMotion'],['Programmes','programmeMotion'],['Leaves','leafMotion']].forEach(([id,motionId])=>{
+    const parent=$(id), wrapper=element('g',parent,{id:motionId});
+    [...parent.children].filter(node=>node!==wrapper).forEach(node=>wrapper.append(node));
+  });
+
+  // Resting hit areas keep hover stable as the canopy expands away from the pointer.
+  const leafHits=element('g',$('Leaves'),{'aria-hidden':'true'});
+  [...$('leafMotion').children].forEach(placement=>{
+    const hit=element('g',leafHits,{transform:placement.getAttribute('transform')});
+    hit.append(placement.querySelector('circle').cloneNode(true));
+  });
+
+  // SVG paints later siblings in front. Keep the original order for restoration.
+  const paintOrder=[$('treeArt'),$('Crown')].map(parent=>({parent,nodes:[...parent.children]}));
+  function bringRegionForward(key) {
+    paintOrder.forEach(({parent,nodes})=>nodes.forEach((node,index)=>{
+      if(parent.children[index]!==node)parent.insertBefore(node,parent.children[index]||null);
+    }));
+    if(!key)return;
+    const node=$(key);
+    node.parentNode.append(node);
+    if(key!=='Roots')$('treeArt').append($('Crown'));
+  }
+  // Animate the wrapper attributes directly: SVG reordering must not restart
+  // CSS transitions when a hovered region is brought to the front.
+  const hoverMotion=[['Roots','rootMotion',1.06,1.09],['Programmes','programmeMotion',1.04,1.05],['Leaves','leafMotion',1.04,1.05]]
+    .map(([key,id,expandedX,expandedY])=>({key,node:$(id),expandedX,expandedY,x:1,y:1}));
+  let hoverFrame=0;
+  function easeHover(key) {
+    cancelAnimationFrame(hoverFrame);
+    const start=performance.now();
+    hoverMotion.forEach(p=>{
+      p.fromX=p.x;p.fromY=p.y;
+      p.toX=p.key===key&&!reducedMotion.matches?p.expandedX:1;
+      p.toY=p.key===key&&!reducedMotion.matches?p.expandedY:1;
+    });
+    const tick=time=>{
+      const t=reducedMotion.matches?1:Math.min(1,(time-start)/550);
+      const eased=(1-Math.cos(Math.PI*t))/2;
+      hoverMotion.forEach(p=>{
+        p.x=p.fromX+(p.toX-p.fromX)*eased;p.y=p.fromY+(p.toY-p.fromY)*eased;
+        p.node.setAttribute('transform',`translate(400 500) scale(${p.x} ${p.y}) translate(-400 -500)`);
+      });
+      hoverFrame=t<1?requestAnimationFrame(tick):0;
+    };
+    tick(start);
+  }
+  let activeRegion = null;
+  function highlight(key) {
+    if (drawer.open) return;
+    if(activeRegion!==key){bringRegionForward(key);easeHover(key);}
+    activeRegion = key;
+    if(key==='Leaves' && !growthFrame)startBreeze();
+    tiers.forEach(node => {
+      node.classList.toggle('is-active',node.id===key);
+      node.style.opacity=!key || node.id===key ? '1' : '.4';
+    });
+    if (key) {
+      $('treeContext').firstElementChild.textContent = destinations[key].title;
+      $('treeContext').lastElementChild.textContent = 'Click, tap, or press Enter to explore.';
+    }
+    $('treeContext').classList.toggle('visible', !!key);
+  }
+  keys.forEach(key => {
+    const node = $(key);
+    node.setAttribute('aria-label', destinations[key].title);
+    node.setAttribute('aria-description', 'Open the '+destinations[key].title+' page overlay');
+    node.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') highlight(key); });
+    node.addEventListener('pointerleave', () => highlight(document.activeElement?.matches(':focus-visible') && keys.includes(document.activeElement.id)?document.activeElement.id:null));
+    node.addEventListener('focus', () => highlight(key));
+    node.addEventListener('blur', () => highlight(null));
+    node.addEventListener('click', () => openPanel(key));
+    node.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openPanel(key); }
+    });
+  });
+  function openPanel(key) {
+    if (drawer.open) return;
+    clearTimeout(pendingGrowth);
+    finishGrowth();
+    opener = $(key);
+    highlight(null);
+    const data = destinations[key];
+    $('treeDrawerTitle').textContent = data.title;
+    const page = $('treePage');
+    page.title = data.title+' — classic page';
+    page.src = data.href+'?treeOverlay=1&v=2';
+    drawer.showModal();
+    document.body.classList.add('tree-modal-open');
+    $('treeClose').focus();
+  }
+  window.addEventListener('message',event => {
+    if(event.origin!==location.origin || event.source!==$('treePage').contentWindow)return;
+    if(event.data==='close-tree-overlay')drawer.close();
+    if(event.data==='focus-tree-close')$('treeClose').focus();
+  });
+  drawer.addEventListener('cancel',event=>{
+    if($('treePage').contentDocument?.querySelector('#article-modal')?.open) {
+      event.preventDefault();
+      $('treePage').contentWindow.postMessage('back-to-news',location.origin);
+    }
+  });
+  $('treeClose').addEventListener('click',()=>drawer.close());
+  $('treeClose').addEventListener('keydown',event=>{
+    if(event.key!=='Tab')return;
+    const doc=$('treePage').contentDocument;
+    const targets=doc?[...doc.querySelectorAll('a[href],button,input,select,textarea,[tabindex="0"]')].filter(node=>node.getClientRects().length && !node.disabled):[];
+    event.preventDefault();
+    if(targets.length)(event.shiftKey?targets.at(-1):targets[0]).focus();
+    else if(doc?.querySelector('main')) {
+      const main=doc.querySelector('main');main.tabIndex=-1;main.focus();
+    }
+  });
+  drawer.addEventListener('click',event=>{
+    if(event.target!==drawer)return;
+    const r=drawer.getBoundingClientRect();
+    if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)drawer.close();
+  });
+  drawer.addEventListener('close',()=>{
+    document.body.classList.remove('tree-modal-open');
+    svg.setAttribute('viewBox',HOME);
+    if(visual) { opener?.focus(); if(!reducedMotion.matches)startBreeze(); }
+    else toggle.focus();
+    highlight(null);
+  });
+
+  function finishGrowth() {
+    cancelAnimationFrame(growthFrame);growthFrame=0;growthTime=2.9;
+    growthParts.forEach(part=>part.node.removeAttribute('mask'));
+    leafReveals.forEach(node=>{node.removeAttribute('transform');node.removeAttribute('opacity');});
+    petioles.forEach(part=>part.node.removeAttribute('opacity'));
+    collar.removeAttribute('opacity');
+  }
+  function prepareGrowth() {
+    growthTime=0;
+    growthParts.forEach(part=>{
+      part.node.setAttribute('mask',`url(#${part.id})`);
+      part.stroke.setAttribute('d','M0 0');
+    });
+    leafReveals.forEach(node=>{node.setAttribute('transform','scale(0)');node.setAttribute('opacity','0');});
+    petioles.forEach(part=>part.node.setAttribute('opacity','0'));
+    collar.setAttribute('opacity','0');
+  }
+  function resetAnimation() {
+    clearTimeout(pendingGrowth);
+    finishGrowth();stopBreeze();
+    svg.setAttribute('viewBox',HOME);
+    highlight(null);
+  }
+  // One animation clock; wrapper rotations never alter authored leaf placements.
+  let breezeFrame = 0, previousTime = 0, nextFall = 6, elapsed = 0;
+  let swayPhase = 0, swayAmount = 0;
+  const falling = [];
+  const fallLayer = element('g', svg, {'aria-hidden':'true','pointer-events':'none'});
+  function stopBreeze() {
+    cancelAnimationFrame(breezeFrame); breezeFrame=0; previousTime=0;
+    falling.splice(0).forEach(item=>item.node.remove());
+    foliage.forEach(node=>node.removeAttribute('transform'));
+    swayPhase=0; swayAmount=0; elapsed=0; nextFall=6;
+  }
+  function startBreeze() {
+    if(breezeFrame || !visual || reducedMotion.matches)return;
+    previousTime=0;
+    const tick = time => {
+      breezeFrame=0;
+      if(!visual || reducedMotion.matches)return;
+      const dt=previousTime?Math.min((time-previousTime)/1000,.05):0;
+      previousTime=time;
+      if(!drawer.open && !document.hidden) {
+        const target=activeRegion==='Leaves'?1:.3;
+        swayAmount += (target-swayAmount)*Math.min(1,dt*5);
+        if(!target && swayAmount<.002)swayAmount=0;
+        if(swayAmount) {
+          swayPhase += dt;
+          foliage.forEach((node,i)=>node.setAttribute('transform',`rotate(${Math.sin(swayPhase*2.1+i*.43)*(9+i%5)*swayAmount})`));
+        } else foliage.forEach(node=>node.removeAttribute('transform'));
+        elapsed+=dt;
+        if(elapsed>nextFall && falling.length<3) {
+          nextFall=elapsed+4+Math.random()*4;
+          const source=foliage[Math.floor(Math.random()*foliage.length)];
+          const origin=new DOMPoint(0,0).matrixTransform(source.getCTM()).matrixTransform(svg.getCTM().inverse());
+          const node=element('g',fallLayer);
+          const shape=source.querySelector('path').cloneNode(true);
+          shape.setAttribute('fill',getComputedStyle(source.querySelector('path')).fill);
+          node.append(shape);
+          falling.push({node,x:origin.x,y:origin.y,age:0,angle:Math.random()*120});
+        }
+        for(let i=falling.length-1;i>=0;i--) {
+          const leaf=falling[i]; leaf.age+=dt;
+          const progress=leaf.age/5;
+          leaf.node.setAttribute('transform',`translate(${leaf.x+Math.sin(leaf.age*1.7)*22} ${leaf.y+(700-leaf.y)*progress}) rotate(${leaf.angle+leaf.age*35}) scale(.85)`);
+          leaf.node.setAttribute('opacity',String(Math.max(0,1-progress*1.25)));
+          if(progress>=.8){leaf.node.remove();falling.splice(i,1);}
+        }
+      }
+      breezeFrame=requestAnimationFrame(tick);
+    };
+    breezeFrame=requestAnimationFrame(tick);
+  }
+  function renderGrowth(elapsed) {
+    growthTime=elapsed;
+    const progress=(t,start,duration)=>Math.min(1,Math.max(0,(t-start)/duration));
+    collar.setAttribute('opacity',String(progress(elapsed,0,.18)));
+      growthParts.forEach(part=>{
+        const p=progress(elapsed,part.start,part.duration);
+        if(p===1){part.node.removeAttribute('mask');return;}
+        part.node.setAttribute('mask',`url(#${part.id})`);
+        if(p===0){part.stroke.setAttribute('d','M0 0');return;}
+        const left=[],right=[];
+        for(let i=0;i<=40;i++) {
+          const t=p*i/40, position=t*80, index=Math.min(79,Math.floor(position));
+          const a=part.samples[index],b=part.samples[index+1],mix=position-index;
+          const x=a.x+(b.x-a.x)*mix,y=a.y+(b.y-a.y)*mix;
+          const nx=a.nx+(b.nx-a.nx)*mix,ny=a.ny+(b.ny-a.ny)*mix;
+          // The growing tip narrows into a bud rather than a flat clipped end.
+          const taper=Math.min(1,(p-t)/.14);
+          const radius=part.width*.55*taper;
+          left.push([x+nx*radius,y+ny*radius]);right.push([x-nx*radius,y-ny*radius]);
+        }
+        part.stroke.setAttribute('d','M'+left.concat(right.reverse()).map(coords).join(' L')+' Z');
+      });
+      petioles.forEach(part=>part.node.setAttribute('opacity',String(progress(elapsed,part.start,.1))));
+      leafReveals.forEach(node=>{
+        const p=progress(elapsed,Number(node.dataset.start),.38);
+        const eased=p*p*(3-2*p);
+        node.setAttribute('transform',`scale(${eased})`);
+        node.setAttribute('opacity',String(p));
+      });
+  }
+  function grow() {
+    if(!visual || reducedMotion.matches){finishGrowth();return;}
+    let elapsed=0, previous=0;
+    const tick=time=>{
+      const dt=previous?Math.min((time-previous)/1000,.05):0;previous=time;
+      if(!document.hidden)elapsed+=dt;
+      renderGrowth(Math.min(2.9,elapsed));
+      if(elapsed<2.9)growthFrame=requestAnimationFrame(tick);
+      else {finishGrowth();startBreeze();}
+    };
+    growthFrame=requestAnimationFrame(tick);
+  }
+  function clearTreeExit() {
+    document.body.classList.remove('tree-returning');
+    section.classList.remove('tree-exiting');
+    section.removeAttribute('style');section.inert=false;
+    section.hidden=!visual;
+  }
+  function reverseGrowth(from) {
+    let start;
+    renderGrowth(from);
+    const tick=time=>{
+      start??=time;
+      const progress=Math.min(1,(time-start)/320);
+      renderGrowth(from*(1-progress));
+      if(progress<1)growthFrame=requestAnimationFrame(tick);
+      else {growthFrame=0;clearTreeExit();}
+    };
+    growthFrame=requestAnimationFrame(tick);
+  }
+  function clearModeTransition() {
+    clearTreeExit();
+    modeTransition?.kill?.();modeTransition?.cancel?.();
+    transitionAnimations.splice(0).forEach(animation=>animation.cancel());
+    transitionGhosts.splice(0).forEach(node=>node.remove());
+    if(gs)gs.set([toggle,logo,...nav.children],{clearProps:'transform,opacity,filter,visibility'});
+    else [toggle,logo,...nav.children].forEach(node=>{node.style.transform='';node.style.opacity='';node.style.filter='';});
+  }
+  function outgoingCopy(node) {
+    const rect=node.getBoundingClientRect(), opacity=getComputedStyle(node).opacity;
+    const ghost=node.cloneNode(true);
+    ghost.removeAttribute('id');ghost.hidden=false;ghost.inert=true;ghost.setAttribute('aria-hidden','true');
+    Object.assign(ghost.style,{position:'fixed',left:rect.left+'px',top:rect.top+'px',width:rect.width+'px',height:rect.height+'px',margin:'0',opacity,transform:'none',pointerEvents:'none',zIndex:'5'});
+    document.body.append(ghost);transitionGhosts.push(ghost);return ghost;
+  }
+  toggle.addEventListener('click',()=>{
+    const oldRect=toggle.getBoundingClientRect();
+    const treeRect=section.getBoundingClientRect(), exitFrom=growthTime;
+    clearModeTransition();
+    const entering=!visual;
+    const ghosts=entering && !reducedMotion.matches?[outgoingCopy(logo),outgoingCopy(nav)]:[];
+    visual=entering;resetAnimation();
+    if(drawer.open)drawer.close();
+    toggle.setAttribute('aria-checked',String(visual));
+    toggle.setAttribute('aria-label',visual?'Switch to classic mode':'Switch to visualized mode');
+    document.body.dataset.mode=visual?'visualized':'classic';
+    section.hidden=!visual;
+    if(!visual && !reducedMotion.matches) {
+      section.hidden=false;section.inert=true;section.classList.add('tree-exiting');
+      document.body.classList.add('tree-returning');
+      Object.assign(section.style,{position:'fixed',left:treeRect.left+'px',top:treeRect.top+'px',width:treeRect.width+'px',margin:'0',pointerEvents:'none'});
+      reverseGrowth(exitFrom);
+    }
+    logo.hidden=visual;logo.style.display=visual?'none':'';
+    nav.hidden=visual;nav.style.display=visual?'none':'';
+    document.body.style.paddingTop=visual?'3rem':'20vh';
+    const newRect=toggle.getBoundingClientRect();
+    if(reducedMotion.matches)return;
+    const x=oldRect.left-newRect.left,y=oldRect.top-newRect.top;
+    if(gs) {
+      modeTransition=gs.timeline({onComplete:()=>{
+        transitionGhosts.splice(0).forEach(node=>node.remove());
+        gs.set([toggle,logo,...nav.children],{clearProps:'transform,opacity,filter,visibility'});
+      }});
+      modeTransition.fromTo(toggle,{x,y},{x:0,y:0,duration:.95,ease:'power3.inOut'},0);
+      if(visual) {
+        modeTransition.to(ghosts[0],{y:-32,scale:.9,opacity:0,filter:'blur(5px)',duration:.55,ease:'power2.in'},0);
+        modeTransition.to(ghosts[1],{y:18,opacity:0,filter:'blur(3px)',duration:.4,ease:'power2.in'},.06);
+      } else {
+        modeTransition.fromTo(logo,{y:24,scale:.92,opacity:0,filter:'blur(6px)'},{y:0,scale:1,opacity:1,filter:'blur(0px)',duration:.45,ease:'power3.out'},.36);
+        modeTransition.fromTo([...nav.children],{y:18,opacity:0,filter:'blur(3px)'},{y:0,opacity:1,filter:'blur(0px)',duration:.35,stagger:.05,ease:'power2.out'},.42);
+      }
+    } else {
+      // Retain animated navigation if the optional GSAP file cannot be loaded.
+      modeTransition=toggle.animate([{transform:`translate(${x}px,${y}px)`},{transform:'none'}],{duration:950,easing:'ease-in-out'});
+      ghosts.forEach(ghost=>{
+        const animation=ghost.animate([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(-24px)'}],{duration:500,fill:'forwards'});
+        animation.onfinish=()=>ghost.remove();transitionAnimations.push(animation);
+      });
+      if(!visual)[logo,...nav.children].forEach((node,i)=>transitionAnimations.push(node.animate([{opacity:0,transform:'translateY(20px)'},{opacity:1,transform:'none'}],{duration:450,delay:360+i*50,fill:'backwards'})));
+    }
+    if(visual){prepareGrowth();pendingGrowth=setTimeout(grow,650);}
+  });
+  reducedMotion.addEventListener('change',()=>{
+    clearModeTransition();resetAnimation();easeHover(null);
+    if(visual && !reducedMotion.matches)startBreeze();
+  });
+  document.addEventListener('visibilitychange',()=>{
+    previousTime=0;
+  });
+});
+  </script>
 </body>
 </html>
