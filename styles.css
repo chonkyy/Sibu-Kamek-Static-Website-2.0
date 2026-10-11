@@ -2,7 +2,7 @@
   --ink: #231f20;
   --blue: #00adee;
   --red: #ee4036;
-  --azure:#2d6983;
+  --azure: #2d6983;
   --lime: #d7df27;
   --pale: #f1f2f2;
   --muted: #687174;
@@ -138,13 +138,13 @@ nav summary:focus-visible {
 .dropdown-menu a:last-child {
   border-bottom: 0;
 }
-.intro-section{
+.intro-section {
   scroll-margin-top: 100px;
 }
-.quote-band{
+.quote-band {
   scroll-margin-top: 150px;
 }
-.feature-section{
+.feature-section {
   scroll-margin-top: 110px;
 }
 
@@ -162,7 +162,9 @@ nav summary:focus-visible {
   height: 2px;
   margin: 5px 0;
   background: var(--azure);
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 .menu-toggle.is-open span:first-child {
   transform: translateY(7px) rotate(45deg);
@@ -208,12 +210,22 @@ nav summary:focus-visible {
 }
 
 @keyframes hero-overlay-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes hero-content-in {
-  from { opacity: 0; transform: translateY(22px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-image,
@@ -280,7 +292,7 @@ h2 em {
 .button:hover {
   transform: translateY(-3px);
   box-shadow: 5px 5px 0 var(--ink);
-  color: #fff; 
+  color: #fff;
 }
 .button-blue {
   background: var(--blue);
@@ -346,6 +358,7 @@ h2 em {
 }
 .intro-section h2,
 .section-heading h2,
+.feature-copy h1,
 .feature-copy h2,
 .places-copy h2,
 .contact-section h2 {
@@ -603,6 +616,7 @@ blockquote {
 .feature-copy {
   max-width: 500px;
 }
+.feature-copy h1,
 .feature-copy h2 {
   margin-bottom: 28px;
 }
@@ -753,7 +767,9 @@ blockquote {
   flex: 0 0 calc((100% - 36px) / 3);
   background: #fff;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .news-card:hover,
 .news-card:focus-visible {
@@ -1236,43 +1252,56 @@ blockquote {
   display: none !important;
 }
 
-/* Classic pages embedded in the tree's native dialog. */
-.tree-embedded .site-header, .tree-embedded .site-footer { display:none; }
-.tree-embedded body { margin:0; }
-.tree-embedded main { overflow-x:clip; }
-.tree-embedded .container { width:min(100% - 40px, 980px); }
-.tree-embedded main > section { padding-top:40px; padding-bottom:40px; }
-.tree-embedded h1 { font-size:clamp(42px,7vw,76px); line-height:1; }
-
-.tree-embedded .news-card { min-width:0; }
-.tree-embedded .tree-outcomes { background:var(--pale); }
-.tree-embedded .tree-outcomes h2 { margin:12px 0 20px; }
-.news-card-static { cursor:default; }
-@media(max-width:600px) {
-
-  .tree-embedded .two-column, .tree-embedded .feature-grid, .tree-embedded .places-grid { grid-template-columns:1fr; }
-  .tree-embedded .container { width:calc(100% - 32px); }
-}
-@media(prefers-reduced-motion:reduce) {
-  .tree-embedded *, .tree-embedded *::before, .tree-embedded *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
-}
-
 /* Native horizontal scrolling works for swipe, trackpad, wheel and keyboard. */
-[hidden] { display:none !important; }
-.news-track { overflow-x:auto; padding:8px 8px 14px 0; scroll-snap-type:x proximity; scroll-padding-inline:0; transition:none; scrollbar-color:var(--azure) var(--pale); }
-.news-card { scroll-snap-align:start; }
-.news-track:focus-visible { outline:2px solid var(--azure); outline-offset:-2px; }
-.news-read svg { color:var(--red); }
-.carousel-button { display:inline-grid; place-items:center; }
-.carousel-button:disabled { opacity:.35; cursor:default; }
-.article-modal { border:0; margin:0; width:100%; max-width:none; height:100dvh; max-height:none; }
-.article-modal:not([open]) { display:none; }
-.article-modal::backdrop { background:transparent; }
-.article-close { display:grid; place-items:center; min-width:44px; min-height:44px; }
-.article-open { overflow:hidden; }
-.tree-embedded .article-modal[open] { display:block; position:static; height:auto; padding:0; background:white; overflow:visible; }
-.tree-embedded .article-dialog { width:100%; max-height:none; overflow:visible; box-shadow:none; }
-.tree-embedded .article-close { position:sticky; top:12px; margin:12px 0 12px 16px; }
-.tree-embedded .article-content { padding:28px clamp(20px,5vw,48px) 40px; }
-.tree-embedded .article-image { height:clamp(190px,32vw,320px); }
-.tree-embedded .article-content p { max-width:70ch; }
+[hidden] {
+  display: none !important;
+}
+.news-track {
+  overflow-x: auto;
+  padding: 8px 8px 14px 0;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 0;
+  transition: none;
+  scrollbar-color: var(--azure) var(--pale);
+}
+.news-card {
+  scroll-snap-align: start;
+}
+.news-track:focus-visible {
+  outline: 2px solid var(--azure);
+  outline-offset: -2px;
+}
+.news-read svg {
+  color: var(--red);
+}
+.carousel-button {
+  display: inline-grid;
+  place-items: center;
+}
+.carousel-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.article-modal {
+  border: 0;
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+}
+.article-modal:not([open]) {
+  display: none;
+}
+.article-modal::backdrop {
+  background: transparent;
+}
+.article-close {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+}
+.article-open {
+  overflow: hidden;
+}
